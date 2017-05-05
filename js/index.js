@@ -1,48 +1,33 @@
 function keyAction(event) {
   var buttonText = event.srcElement.innerText;
   if (buttonText === 'C') {
+    display = '';
     error = false;
-    expression = '0';
-  } else if (buttonText === '÷' && !error) {
-    expression += '/';
-  } else if (buttonText === 'x' && !error) {
-    expression += '*';
-  } else if (buttonText === '-' && !error) {
-    expression += '-';
-  } else if (buttonText === '+' && !error) {
-    expression += '+';
   } else if (buttonText === '=' && !error) {
-    expression = String(checkAndEval(expression));
+    display = checkAndEval(display);
   } else if (!error) {
-    // a number key was clicked
-    if (expression === '0') {
-      expression = '';
-    }
-    expression += buttonText;
+    display += buttonText;
   }
-  console.log(typeof expression);
-  display = expression.replace(/\//, '÷');
-  // .replace(/\*/, 'x');
   $('#screen').text(display);
 }
 
 function checkAndEval(expression) {
   var result;
+  expression = expression.replace(/÷/g, '/').replace(/x/g, '*');
   try {
     result = eval(expression);
   }
   catch(err) {
     error = true;
   }
-  if (error) {
+  if (error || result === Infinity || result === -Infinity) {
     result = 'Error';
   }
-  return result;
+  return String(result);
 }
 
 var error = false;
-var expression = '0';
-var display = expression;
+var display = '';
 
 $(document).ready(() => {
   $('#screen').text(display);
